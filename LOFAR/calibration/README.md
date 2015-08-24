@@ -10,7 +10,7 @@ Drawbacks:
 - Relies on GNU parallel which is often not part of default installation. Many distribution provide packages though and compilation from source is quite easy as well.
 
 Prerequisities:
-I   mscorpol
+I   mscorpol (https://github.com/2baOrNot2ba/mscorpol)
 II  psrchive
 III psrcat 
 IV  GNU parallel
