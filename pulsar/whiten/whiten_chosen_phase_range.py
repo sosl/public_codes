@@ -32,7 +32,7 @@ parser.add_option('--ope', '--offpulse_stop', dest='ope', type='int',
 parser.add_option('-e', dest='ext', type='string',
                   help="Write new files with this extension")
 parser.add_option('-O', dest='outpath', type='string',
-                  help="Write new files with this extension")
+                  help="Write new files in this directory")
 parser.add_option('-v', dest='verbose', action='store_true',
                   help="Verbose mode")
 
