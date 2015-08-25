@@ -90,4 +90,4 @@ for archive_filename in args:
 
     if options.verbose:
         print "writing " + splitext(archive_filename)[0]+"."+options.ext
-    ar.unload(options.outpath+"/"+splitext(archive_filename)[0]+"."+options.ext)
+    ar.unload(options.outpath+"/"+splitext(basename(archive_filename))[0]+"."+options.ext)
