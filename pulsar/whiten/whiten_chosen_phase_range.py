@@ -15,6 +15,7 @@ import psrchive as psr
 from sys import argv
 from os.path import splitext
 from os.path import split
+from os.path import basename
 from optparse import OptionParser
 
 parser = OptionParser ()
