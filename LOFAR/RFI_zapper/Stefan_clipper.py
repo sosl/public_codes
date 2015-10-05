@@ -130,7 +130,7 @@ if options.verbose:
 data = ar.get_data()
 #apply previous zapping to data:
 weights = ar.get_weights()
-data_w = apply_weights(data.squeeze(), weights) # squeeze removes the pol dimension
+data_w = apply_weights(data.squeeze(axis=1), weights) # squeeze removes the pol dimension
 
 remove_list = []
 #zap in time (1) and frequency (0) domains
