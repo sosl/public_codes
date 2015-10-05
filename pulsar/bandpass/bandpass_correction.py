@@ -10,7 +10,6 @@ import numpy as np
 from os.path import splitext
 from os.path import split
 from os.path import basename
-import optparse
 import argparse
 
 parser = argparse.ArgumentParser(description="This code will estimate the"
