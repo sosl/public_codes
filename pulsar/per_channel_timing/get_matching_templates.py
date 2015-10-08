@@ -38,6 +38,7 @@ for i in range(std.get_nchan()):
 
 for input_ar in args.INPUT_ARCHIVE:
     data = psr.Archive_load(input_ar)
+    print "handling " + input_ar + " with " + str(data.get_nchan()) + " channels"
     data_freqs = []
     for i in range(data.get_nchan()):
         data_freqs.append(data.get_Profile(0, 0, i).get_centre_frequency())
@@ -50,6 +51,7 @@ for input_ar in args.INPUT_ARCHIVE:
     for k, g in groupby(enumerate(std_delete_channels), lambda (i,x):i-x):
         group = map(itemgetter(1), g)
         ranges.append((group[0], group[-1]))
+    print ranges
 
 # check if all the channels from the data where found in the template
 
@@ -59,8 +61,15 @@ for input_ar in args.INPUT_ARCHIVE:
 # remove the unwanted channels from a copy of the template:
 
     std_copy = std.clone() 
-    for x,y in ranges:
-        std_copy.remove_chan(x, y)
+    for x,y in reversed(ranges):
+        try:
+            std_copy.remove_chan(x, y)
+        except IndexError:
+            print "removing channels from " + str(x) + " to " + str(y)
+            print "org template had " + std.get_nchan() + " channels"
+            print "copy has now " + std_copy.get_nchan() + " channels"
+        except:
+            print "Other exception"
     if was_dedispersed:
         std_copy.dedisperse()
     std_copy.unload(input_ar + ".matched_std")
