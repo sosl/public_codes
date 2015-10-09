@@ -74,6 +74,7 @@ for ar_name in args.INPUT_ARCHIVE:
         xlab = plt.xlabel('frequency [MHz]')
         ylab = plt.ylabel('power [arbitrary]')
         plt.savefig(outname+"png")
+        plt.clf()
 
     # Get data and normalize it using the bandpass. We want to correct the data in their original form, thus we need to reload the archive:
     if args.verbose:
