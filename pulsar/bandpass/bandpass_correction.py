@@ -86,8 +86,8 @@ for ar_name in args.INPUT_ARCHIVE:
     for isub in range(ar.get_nsubint()):
         for ipol in range(ar.get_npol()):
             for ichan in range(ar.get_nchan()):
+                prof = ar.get_Profile(isub, ipol, ichan) 
                 if ichan in non_zeroes[0]:
-                    prof = ar.get_Profile(isub, ipol, ichan) 
                     prof.scale(bl_mean_avg / bl_mean[ichan])
                 else:
                     prof.set_weight(0.0)
