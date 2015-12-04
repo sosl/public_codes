@@ -50,8 +50,8 @@ parser = OptionParser ()
 parser.add_option('-a', '--archive', dest='archive_name', type='string', \
                   metavar="ARCHIVE")
 
-parser.add_option('-t', '--threshold', dest='threshold', type='int', \
-                  default=4)
+parser.add_option('-t', '--threshold', dest='threshold', type='float', \
+                  default=4.0)
 
 parser.add_option('--kernel-size_subint', dest='kernel_subint', type='int', \
                   default=17, help="median filter kernel size for subint clipping. Must be odd.")
