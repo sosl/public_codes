@@ -13,6 +13,8 @@ parser.add_argument('-t', '--template', dest='template', nargs=1,
         help="Template from which the new templates are to be derived")
 parser.add_argument('INPUT_ARCHIVE', nargs='+',
         help="Archives for which a matched template is needed")
+parser.add_argument('-e', '--ext', dest='ext', nargs=1,
+        default="matched_std", help="extension for the output file")
 
 args = parser.parse_args()
 
@@ -72,4 +74,4 @@ for input_ar in args.INPUT_ARCHIVE:
             print "Other exception"
     if was_dedispersed:
         std_copy.dedisperse()
-    std_copy.unload(input_ar + ".matched_std")
+    std_copy.unload(input_ar + "." + args.ext[0])
