@@ -191,7 +191,7 @@ for _axis in [1, 0]:
         _kernel_size = options.kernel_channel
     data_off_mean_medfilt = medfilt(data_off_mean, kernel_size=_kernel_size)
     if options.verbose:
-        print "applied a median filter with kernel size of " + str(kernel_size)
+        print "applied a median filter with kernel size of " + str(_kernel_size)
     # subtract the median-filtered data from data:
     data_off_mean_subtr_medfilt = data_off_mean - data_off_mean_medfilt
     # apply sigma clipping to enable std dev estimation (could use robust stats
