@@ -8,19 +8,19 @@
 # 
 # You are free to:
 #
-# Share — copy and redistribute the material in any medium or format
-# Adapt — remix, transform, and build upon the material
+# Share - copy and redistribute the material in any medium or format
+# Adapt - remix, transform, and build upon the material
 # for any purpose, even commercially.
 #
 # The licensor cannot revoke these freedoms as long as you follow the license terms.
 #
 # Under the following terms:
 #
-# Attribution — You must give appropriate credit, provide a link to the license, and
+# Attribution - You must give appropriate credit, provide a link to the license, and
 # indicate if changes were made. You may do so in any reasonable manner, but not in
 # any way that suggests the licensor endorses you or your use.
 #
-# No additional restrictions — You may not apply legal terms or technological measures
+# No additional restrictions - You may not apply legal terms or technological measures
 # that legally restrict others from doing anything the license permits.
 #
 # See the full text at https://creativecommons.org/licenses/by/4.0/legalcode
@@ -69,6 +69,12 @@ parser.add_option('-l', '--onpulse_stop', dest='opl', type='int', \
                   default=-1, help="last bin of the on-pulse region", \
                    metavar="ONPULSE_STOP")
 
+parser.add_option('-A', '--auto', dest='auto', \
+                  action='store_true', default=False, help="automatically determine centre of on-pulse region")
+
+parser.add_option('-W', '--half_width', type=int, \
+                  default=0, help="half width of on-pulse region for auto-determination")
+
 parser.add_option('-s', '--subint', dest='subint_only', \
                   action='store_true', default=False, \
                   help="zap only in time domain")
@@ -89,8 +95,8 @@ parser.add_option('-v', '--verbose', dest='verbose', \
 ext = "." + options.ext
 
 threshold =  options.threshold
-if  (options.opf > 0 or options.opl > 0 ) and options.opf * options.opl < 0:
-    print "Please provide both opl and opf!"
+if  ((options.opf > 0 or options.opl > 0 ) and options.opf * options.opl < 0) and not (options.auto and options.half_width>0):
+    print "Please provide both opl and opf or use -A and provide half width"
     print "You can determine these yourself or use:"
     print "psrstat -c on:start,on:end archive.ar"
     print "Currently only a single on-pulse region is supported"
@@ -101,8 +107,13 @@ if (options.subint_only and options.channel_only):
     options.subint_only = False
     options.channel_only = False
 
-opf = options.opf
-opl = options.opl
+if  (options.opf > 0 or options.opl > 0 ):
+    opf = options.opf
+    opl = options.opl
+    half_width=0
+else:
+    half_width=options.half_width
+    
 if not options.archive_name:
     print "ERROR: you must provide an input archive"
     exit(1)
@@ -123,6 +134,18 @@ ar.pscrunch()
 ar.remove_baseline()
 # must dedisperse to get rid of the on-pulse region
 ar.dedisperse()
+nbin=ar.get_nbin()
+
+if half_width > 0:
+    centre = ar.total().get_data().squeeze().argmax()
+    opf=centre-half_width
+    if (opf < 0):
+        opf = nbin - half_width + centre 
+    opl=centre+half_width
+    if (opl > nbin):
+        opl = half_width - nbin + centre
+    if options.verbose:
+        print "determined on pulse to be" + str(opf) + ":" + str(opl)
 
 if options.verbose:
     print "finished basic processing: pscrunch, baseline subtraction and dedispersion"
