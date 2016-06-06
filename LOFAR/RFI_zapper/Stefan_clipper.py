@@ -107,7 +107,7 @@ if (options.subint_only and options.channel_only):
     options.subint_only = False
     options.channel_only = False
 
-if  (options.opf > 0 or options.opl > 0 ):
+if  (options.opf >= 0 or options.opl > 0 ):
     opf = options.opf
     opl = options.opl
     half_width=0
@@ -172,6 +172,8 @@ for _axis in [1, 0]:
         data_off = concatenate((dataA,dataB),1)
         if options.verbose:
             print "prepared off-pulse data by excluding bins from " + str(opf) + " till " + str(opl)
+    elif opf == 0 and opl > 0:
+        data_off = data_ws[:,opl:ar.get_nbin()]
     else:
         print "WARNING: no on-pulse region specified, this zapper is meant to be used on off-pulse only"
         # not necessary as done above for scoping purposes:
