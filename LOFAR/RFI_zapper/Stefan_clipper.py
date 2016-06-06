@@ -95,7 +95,7 @@ parser.add_option('-v', '--verbose', dest='verbose', \
 ext = "." + options.ext
 
 threshold =  options.threshold
-if  ((options.opf > 0 or options.opl > 0 ) and options.opf * options.opl < 0) and not (options.auto and options.half_width>0):
+if  ((options.opf >= 0 or options.opl > 0 ) and options.opf * options.opl < 0) and not (options.auto and options.half_width>0):
     print "Please provide both opl and opf or use -A and provide half width"
     print "You can determine these yourself or use:"
     print "psrstat -c on:start,on:end archive.ar"
