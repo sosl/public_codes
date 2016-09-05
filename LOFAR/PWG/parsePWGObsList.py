@@ -1,8 +1,11 @@
 import urllib2
-import BeautifulSoup
 import getpass
 import os
 from argparse import ArgumentParser
+try:
+    import BeautifulSoup
+except:
+    import bs4 as BeautifulSoup
 
 parser = ArgumentParser(prog="Parse PWG's list of observations")
 
