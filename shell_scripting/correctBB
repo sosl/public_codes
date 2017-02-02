@@ -1,0 +1,15 @@
+#!/bin/bash
+
+TMPF1=`mktemp`
+TMPF2=`mktemp`
+
+echo correcting bounding boxes for $@ files
+for plots in $@ ; do
+  plik=`ls ${plots}`
+  echo preparing ${plik} 
+  gs -sDEVICE=bbox -dBATCH -dNOPAUSE -dQUIET ${plik} 2> $TMPF1
+  cp ${plik} $TMPF2
+  vim.do $TMPF1
+  cp $TMPF2 ${plik}
+done
+
