@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright (C) 2015 by Stefan Oslowski
+# Copyright (C) 2018 by Stefan Oslowski
 # Licensed under the Academic Free License version 3.0
 # Brief explanation of the license can be found here:
 # http://rosenlaw.com/OSL3.0-explained.htm
