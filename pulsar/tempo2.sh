@@ -12,6 +12,12 @@
 set -o errexit
 set -o nounset
 
+if [[ $# -eq 0 ]]
+then
+  echo usage: $0 tempo2_args
+  exit
+fi
+
 par_count=0
 tim_count=0
 pars=()
