@@ -16,6 +16,10 @@ parser = argparse.ArgumentParser(description="This code will estimate the"
          " bandpass from the off-pulse data and apply the correction to all of"
          " data. Note that the baseline will be removed in the process.")
 
+parser.add_argument('-P', dest='nopscr', action='store_true',
+                    help="Detrmine correction for each pol seperately. "
+                    + "WARNING: will only work as expected if you have a "
+                    + "resonably strong signal in all pols")
 parser.add_argument('-e', dest='ext',
                     help="Write new files with this extension")
 parser.add_argument('-O', dest='outpath',
@@ -56,9 +60,7 @@ for ar_name in args.INPUT_ARCHIVE:
         print "Determining the bandpass from off-pulse data"
     subint = ar.get_Integration(0)
     (bl_mean, bl_var) = subint.baseline_stats()
-    bl_mean = bl_mean.squeeze()
-    bl_var = bl_var.squeeze()
-    non_zeroes = np.where(bl_mean != 0.0)
+    non_zeroes = np.where(bl_mean[0] != 0.0)[0]
 
     if args.plot:
         # Obtain the baseline statistics which we use to derive the bandpass
@@ -75,10 +77,13 @@ for ar_name in args.INPUT_ARCHIVE:
         # Plot the bandpass:
         if args.verbose:
             print "plotting the bandpass estimate"
-        fig1 = plt.plot(freqs[non_zeroes], bl_mean[non_zeroes])
+        fig1 = plt.figure()
+        lines = []
+        for ipol in xrange(bl_mean.shape[0]):
+            plt.plot(freqs[non_zeroes], bl_mean[ipol][non_zeroes])
         xlab = plt.xlabel('frequency [MHz]')
         ylab = plt.ylabel('power [arbitrary]')
-        plt.savefig(outname+"png")
+        fig1.savefig(outname+"png")
         plt.clf()
 
     # Get data and normalize it using the bandpass. We want to correct the data
@@ -88,13 +93,18 @@ for ar_name in args.INPUT_ARCHIVE:
     ar = psr.Archive_load(ar_name)
     ar.remove_baseline()
 
-    bl_mean_avg = np.average(bl_mean[non_zeroes])
-    for isub in range(ar.get_nsubint()):
-        for ipol in range(ar.get_npol()):
-            for ichan in range(ar.get_nchan()):
+    bl_mean_avg = []
+    for ipol in xrange(bl_mean.shape[0]):
+        bl_mean_avg.append(np.average(bl_mean[ipol][non_zeroes]))
+    for isub in xrange(ar.get_nsubint()):
+        for ipol in xrange(ar.get_npol()):
+            for ichan in xrange(ar.get_nchan()):
                 prof = ar.get_Profile(isub, ipol, ichan)
-                if ichan in non_zeroes[0]:
-                    prof.scale(bl_mean_avg / bl_mean[ichan])
+                if ichan in non_zeroes:
+                    if ipol < bl_mean.shape[0]:
+                        prof.scale(bl_mean_avg[ipol] / bl_mean[ipol][ichan])
+                    else:
+                        prof.scale(bl_mean_avg[0] / bl_mean[0][ichan])
                 else:
                     prof.set_weight(0.0)
     if args.verbose:
